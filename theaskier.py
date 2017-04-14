@@ -1,28 +1,92 @@
 import requests, bs4
 
-response_netshoes = requests.get('http://www.netshoes.com.br/produto/100-whey-gold-standard-2-lbs--optimum-nutrition-165-7007-975?&lkey=a6')
-response_madrugadao = requests.get('http://www.madrugaosuplementos.com.br/100-whey-protein-900g-optimum-nutrition/')
-response_submarino = requests.get('https://www.submarino.com.br/produto/14112555/whey-protein-gold-100-909g-optimum-nutrition-banana?DCSext.recom=RR_category_page.rr1-CategoryTopProducts&chave=b2wads_582495e617e124414afe6273_18274474000197&condition=NEW&nm_origem=rec_category_page.rr1-CategoryTopProducts&nm_ranking_rec=2&sellerId=18274474000197')
-response_decathlon = requests.get('http://www.decathlon.com.br/suplementos-e-saude/suplementacao/proteinas/gold-standard-whey-on-baunilha?skuId=984842')
+#program initiate
+print('=================================')
+print('Welcome to THE ASKIER - NETSHOES')
+print('#goNets')
+print('=================================')
 
+#Seleting the SKU
+print('Insert the SKU that you want:')
+product_sku = input('>>> ')
+
+#confirming the SKU
+print('You selected the product with SKU',product_sku, '. Confirm: Y/n')
+confirmation_sku = input('>>> ')
+confirmated_sku = False
+while(confirmated_sku == False):
+	if confirmation_sku == 'Y' or confirmation_sku == 'y':
+		print('lalalal')
+		confirmated_sku = True
+	else:
+		print('Ok. You wan\'t another SKU, right? Type the sku again:')
+		product_sku = input('>>> ')
+
+#Checking on Netshoes Website
+print('Let me check the price of this product on Netshoes Website - Direct Access - No cookie')
+url_netshoes = 'http://www.netshoes.com.br/produto/' + product_sku
+print('The URL of the product',product_sku,'is', url_netshoes)
+response_netshoes = requests.get(url_netshoes)
+print(response_netshoes)
+
+#Getting the HTML of Netshoes webpage
 parsing_response_netshoes = bs4.BeautifulSoup(response_netshoes.text,'html.parser')
-price_netshoes = parsing_response_netshoes.select('.new-price')
 
-response_madrugadao = bs4.BeautifulSoup(response_madrugadao.text,'html.parser')
-price_madrugadao = response_madrugadao.select('.special-price span .price')
+#Getting the NAME of the product
+name_product_netshoes = parsing_response_netshoes.select('.base-title')
+print('The name of the product is: ', name_product_netshoes[0].getText())
 
-print('NETSHOES | MADRUGADAO | SUBMARINO | DECATHLON')
+#Getting the PRICE of the product
+price_product_netshoes = parsing_response_netshoes.select('.new-price')
+print('The price of the product is: ', price_product_netshoes[0].getText())
 
-prices_lists_players = [(price_netshoes[0].getText()),(price_madrugadao[0].getText())]
- 
-print(prices_lists_players[0]+ "|"+prices_lists_players[1])
+#Getting the HTML of Centauro webpage
+url_centauro = 'http://esportes.centauro.com.br/search?w=' + name_product_netshoes[0].getText()
+response_centauro = requests.get(url_centauro)
+print(response_centauro) #print in the response of the website --> Status 200, 300, 400
 
-"""
+#Parsing the HTML of Centauro webpage
+parsing_response_centauro = bs4.BeautifulSoup(response_centauro.text,'html.parser')
 
-print("O preco do Madrugadao eh " +  )
+#Getting the NAME of the product on centauro
+name_product_centauro = parsing_response_centauro.select('#zone1_product1 .product-name .goto-pdp')
+print('The name of the product in Centauro is: ',name_product_centauro[0].getText())
+print(len(name_product_centauro[0].getText()))
 
-print('O preco da Netshoes eh ' + price_netshoes)
-print('O preco no Madrugadao Suplemento eh ' + price_madrugadao)
-print('O preco no Madrugadao Suplemento eh ' + price_madrugadao)
-print('O preco no Madrugadao Suplemento eh ' + price_madrugadao)
-"""
+#Getting the PRICE of the produc
+price_product_centauro = parsing_response_centauro.select('#zone1_product1 .product-name .goto-pdp')
+print(len(price_product_centauro[0]))
+
+name_product_centauro_1 = parsing_response_centauro.find_all(attrs={"data-product-skuid": "849291Q4"})
+print(name_product_centauro_1)
+
+#Getting the NAME of the product of CENTAURO
+#name_product_centauro = parsing_response_centauro.select('.base-title')
+#print('The name of the product is: ', name_product_centauro[0].getText())
+
+
+#Getting the PRICE of the product of CENTAURO
+#price_product_centuaro = parsing_response_centauro.select('.price')
+#print(price_product_centuaro)
+#print('The price of the product is: ', parsing_response_centauro[0].getText())
+
+
+	#If you don't have the sku, insert the product or the url
+		#if it's a product
+			#go to netshoes website
+				#search the product
+					#came back with the product title, SKU, price.
+
+
+
+
+
+#Making the request to the competitor
+	#loop competitors
+		#while find product
+			#From title (hole string):
+				#came back with the product title, sku and price
+
+
+
+
